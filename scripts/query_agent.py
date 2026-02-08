@@ -2,6 +2,10 @@
 """Run the movie recommendation agent: single query or interactive loop."""
 import argparse
 import sys
+from pathlib import Path
+
+# Ensure project root is on path (works when run from any CWD or via IDE)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from haystack.dataclasses import ChatMessage
 

@@ -4,6 +4,10 @@ import argparse
 import logging
 import sys
 import time
+from pathlib import Path
+
+# Ensure project root is on path (works when run from any CWD or via IDE)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from datasets import load_dataset
 

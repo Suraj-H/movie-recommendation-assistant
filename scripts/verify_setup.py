@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Verify setup: imports and config load. No Qdrant/OpenAI calls."""
 import sys
+from pathlib import Path
 
 def main():
-    sys.path.insert(0, ".")
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from config import get_settings
     from data import movie_to_document, movie_to_string
     from indexing import SparseDocumentEmbedder, create_document_store
