@@ -85,11 +85,20 @@ python scripts/run_server.py
 
 - **GET /health** – readiness (no agent call). Returns `{"status": "ok", "agent_loaded": true}`.
 - **POST /query** – body `{"query": "your natural language request"}`. Returns `{"response": "..."}`.
+- **POST /query/stream** – same body; response is Server-Sent Events (SSE): `data: {"type":"token","content":"..."}` per chunk.
 
-Example:
+Example (non-streaming):
 
 ```bash
 curl -X POST http://localhost:8000/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Recommend one action movie"}'
+```
+
+Example (streaming SSE):
+
+```bash
+curl -N -X POST http://localhost:8000/query/stream \
   -H "Content-Type: application/json" \
   -d '{"query": "Recommend one action movie"}'
 ```

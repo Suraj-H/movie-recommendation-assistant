@@ -87,6 +87,28 @@
           "path": ["query"]
         }
       }
+    },
+    {
+      "name": "Query (streaming SSE)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"Recommend five Japanese thrillers.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/query/stream",
+          "host": ["{{base_url}}"],
+          "path": ["query/stream"]
+        }
+      },
+      "description": "Stream agent response as Server-Sent Events. Each line: data: {\"type\":\"token\",\"content\":\"...\"}. Use curl -N or a client that consumes the stream."
     }
   ]
 }
