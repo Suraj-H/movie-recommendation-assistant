@@ -12,6 +12,18 @@ from haystack.dataclasses import ChatMessage
 from agent import build_movie_agent
 
 
+def _looks_like_tool_call_json(text: str) -> bool:
+    """True if text is retrieval_tool call JSON (raw params), not a real reply."""
+    if not text or not text.strip():
+        return False
+    s = text.strip()
+    if s.startswith("{") and "metadata_filters" in s and "operator" in s:
+        return True
+    if "```JSON" in s and "metadata_filters" in s:
+        return True
+    return False
+
+
 def _get_final_reply_text(result: dict) -> str:
     """Extract the final assistant reply, skipping tool-call-only messages (e.g. raw JSON)."""
     messages = result.get("messages") or []
@@ -22,16 +34,15 @@ def _get_final_reply_text(result: dict) -> str:
         text = getattr(msg, "text", None) or ""
         if not text or not text.strip():
             continue
-        stripped = text.strip()
-        # Skip messages that look like retrieval_tool call JSON
-        if stripped.startswith("{") and "metadata_filters" in stripped and "operator" in stripped:
-            continue
-        if stripped.startswith("```JSON") and "metadata_filters" in stripped:
+        if _looks_like_tool_call_json(text):
             continue
         return text
-    # Fallback to last_message
+    # Fallback to last_message; don't show raw JSON to user
     last = result.get("last_message")
-    return getattr(last, "text", None) or "" if last else ""
+    fallback = getattr(last, "text", None) or "" if last else ""
+    if _looks_like_tool_call_json(fallback):
+        return "The assistant didn't return a summary. Try again or rephrase your query."
+    return fallback
 
 
 def main() -> None:
