@@ -34,6 +34,7 @@ Your goal is to generate an input for the retrieval_tool using the user's query,
 - If the user asks for a specific number of movies, set that value as top_k.
 - If the user only specifies a genre, it's acceptable to return only metadata_filters — no query needed.
 - All metadata values must be lowercase.
+- **meta.genre must be single-word values only** (e.g. "comedy", "romance", "drama", "action", "horror", "thriller", "science fiction"). For compound terms like "romantic comedy", use two conditions: {"field": "meta.genre", "operator": "==", "value": "romance"} and {"field": "meta.genre", "operator": "==", "value": "comedy"} with operator "AND".
 - If required, you can combine the conditions with "AND", "NOT" or "OR" operators.
 
 ### Examples
@@ -78,6 +79,21 @@ Here are the tool call parameters for user queries:
     "conditions": [
       {"field": "meta.language", "operator": "==", "value": "ja"},
       {"field": "meta.genre", "operator": "==", "value": "thriller"}
+    ]
+  }
+}
+```
+
+* User: "Romantic comedy, rating above 6" (use single-word genres: romance + comedy)
+
+```JSON
+{
+  "metadata_filters": {
+    "operator": "AND",
+    "conditions": [
+      {"field": "meta.genre", "operator": "==", "value": "romance"},
+      {"field": "meta.genre", "operator": "==", "value": "comedy"},
+      {"field": "meta.rating", "operator": ">", "value": 6}
     ]
   }
 }
