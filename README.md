@@ -41,6 +41,7 @@ python scripts/index_movies.py
 
 - `--recreate`: recreate the index (default).
 - `--no-recreate`: keep existing index and add/overwrite (use with care).
+- If you see 400 errors for genre filters (e.g. sci-fi, "science fiction"), re-run indexing once so genres use the keyword-friendly format.
 
 To free local disk space after indexing:
 - Cached dataset: `./scripts/clear_dataset_cache.sh` (uses `~/.cache/huggingface/datasets/` or `HF_DATASETS_CACHE`).
@@ -94,6 +95,8 @@ curl -X POST http://localhost:8000/query \
 ```
 
 Optional: set `ALLOWED_ORIGINS` (comma-separated) for CORS. For production, add auth (e.g. API key) and rate limiting (e.g. nginx or slowapi).
+
+**Postman:** Import the collection from `postman/Movie_Recommendation_Assistant.postman_collection.json`. Optional: import `postman/Movie_Assistant_Local.postman_environment.json` and select it so `base_url` is `http://localhost:8000`.
 
 ## Project layout
 

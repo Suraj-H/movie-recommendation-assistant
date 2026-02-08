@@ -1,0 +1,92 @@
+{
+  "info": {
+    "name": "Movie Recommendation Assistant",
+    "description": "API for the movie recommendation agent. Start the server with:\n\n  python scripts/run_server.py\n\nThen run requests against http://localhost:8000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        },
+        "description": "Readiness check. Returns 200 if app and agent are loaded."
+      }
+    },
+    {
+      "name": "Query (recommend movies)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"Find me a highly-rated action movie about car racing.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/query",
+          "host": ["{{base_url}}"],
+          "path": ["query"]
+        },
+        "description": "Run the movie recommendation agent. Body: { \"query\": \"<natural language request>\" }. Returns { \"response\": \"<agent reply>\" }."
+      }
+    },
+    {
+      "name": "Query - five Japanese thrillers",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"Recommend five Japanese thrillers.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/query",
+          "host": ["{{base_url}}"],
+          "path": ["query"]
+        }
+      }
+    },
+    {
+      "name": "Query - kids movie about animals",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"What can I watch with my kids, about animals?\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/query",
+          "host": ["{{base_url}}"],
+          "path": ["query"]
+        }
+      }
+    }
+  ]
+}

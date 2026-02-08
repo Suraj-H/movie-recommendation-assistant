@@ -14,8 +14,9 @@ def _safe_float(value, default: float = 5.0) -> float:
 
 
 def _safe_genre_list(genre_raw) -> list[str]:
+    """Return lowercase genre list; spaces in each genre become underscores (Qdrant keyword index)."""
     if isinstance(genre_raw, str):
-        return [g.strip().lower() for g in genre_raw.split(",") if g.strip()]
+        return [g.strip().lower().replace(" ", "_") for g in genre_raw.split(",") if g.strip()]
     return []
 
 

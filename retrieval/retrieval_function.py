@@ -8,12 +8,12 @@ from haystack.components.retrievers.filter_retriever import FilterRetriever
 MAX_TOP_K = 50
 DEFAULT_TOP_K = 5
 
-# Compound genre phrases → list of single-token genres (Qdrant meta.genre is keyword, no spaces)
+# Compound genre phrases → single-token genres (underscore: no space for Qdrant keyword index)
 COMPOUND_GENRE_MAP = {
     "romantic comedy": ["romance", "comedy"],
     "romance comedy": ["romance", "comedy"],
-    "sci-fi": ["science fiction"],
-    "science fiction": ["science fiction"],
+    "sci-fi": ["science_fiction"],
+    "science fiction": ["science_fiction"],
     "action comedy": ["action", "comedy"],
     "drama comedy": ["drama", "comedy"],
     "black comedy": ["comedy"],
@@ -25,10 +25,10 @@ COMPOUND_GENRE_MAP = {
     "action thriller": ["action", "thriller"],
     "horror comedy": ["horror", "comedy"],
 }
-# Single-word synonyms when splitting unknown compounds (e.g. "historical romance" → history, romance)
+# Single-word synonyms when splitting unknown compounds
 WORD_TO_GENRE = {
     "romantic": "romance",
-    "sci": "science fiction",
+    "sci": "science_fiction",
     "historical": "history",
     "fantasy": "fantasy",
     "animation": "animation",
@@ -57,9 +57,11 @@ def _normalize_metadata_filters(filters: dict[str, Any] | None) -> dict[str, Any
         if value_lower in COMPOUND_GENRE_MAP:
             tokens = COMPOUND_GENRE_MAP[value_lower]
         else:
-            # Unknown compound: split on spaces, map known words via WORD_TO_GENRE, use rest as-is
+            # Unknown compound: split on spaces, map known words via WORD_TO_GENRE; use underscore for multi-word
             tokens = [WORD_TO_GENRE.get(w, w) for w in value_lower.split()]
         for token in tokens:
+            # Ensure no space in token (Qdrant keyword index)
+            token = token.replace(" ", "_")
             new_conditions.append({"field": "meta.genre", "operator": "==", "value": token})
     return {"operator": op, "conditions": new_conditions}
 
