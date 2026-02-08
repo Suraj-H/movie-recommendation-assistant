@@ -1,0 +1,8 @@
+haystack-ai>=2.0.0
+datasets>=2.14.0
+qdrant-haystack>=2.0.0
+fastembed-haystack>=0.0.3
+openai>=1.0.0
+python-dotenv>=1.0.0
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
